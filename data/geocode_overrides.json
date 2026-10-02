@@ -1,0 +1,72 @@
+{
+ "CASCO|MI": {
+  "lat": 42.735,
+  "lon": -82.66,
+  "note": "I-94 Exit 257, Casco Twp, St. Clair County"
+ },
+ "CEDAR GROVE|TN": {
+  "lat": 35.825,
+  "lon": -88.595,
+  "note": "I-40 Exit 101, Carroll County (Nominatim chose a namesake near Nashville)"
+ },
+ "ETTERS|PA": {
+  "lat": 40.1529,
+  "lon": -76.7989,
+  "note": "I-83 Exit 32, York County"
+ },
+ "FAIRFIELD|NJ": {
+  "lat": 40.882508,
+  "lon": -74.304593,
+  "note": "I-80 Exit 47B, Fairfield Twp, Essex County"
+ },
+ "FORTSON|GA": {
+  "lat": 32.63,
+  "lon": -84.96,
+  "note": "I-185 Exit 19, Muscogee County (Nominatim chose a namesake near Griffin)"
+ },
+ "HOT SPRINGS NATIONAL PARK|AR": {
+  "lat": 34.5037,
+  "lon": -93.0552,
+  "note": "Postal name for Hot Springs"
+ },
+ "IVYDALE|WV": {
+  "lat": 38.495,
+  "lon": -81.04,
+  "note": "I-79 Exit 40, Clay County (Nominatim chose a namesake near Charleston)"
+ },
+ "KNOXVILLE|AL": {
+  "lat": 32.99,
+  "lon": -87.79,
+  "note": "I-20/I-59 Exit 52, Greene County (Nominatim chose a namesake near Anniston)"
+ },
+ "LIBERTY|PA": {
+  "lat": 41.558497,
+  "lon": -77.10552,
+  "note": "US-15 & SR-414, Liberty Borough, Tioga County"
+ },
+ "MOUNT NEBO|WV": {
+  "lat": 38.245,
+  "lon": -80.857,
+  "note": "US-19 & SR-129, Nicholas County (Nominatim chose Preston County)"
+ },
+ "NEWBURG|PA": {
+  "lat": 40.136985,
+  "lon": -77.554642,
+  "note": "PA Turnpike Exit 226 area, Newburg Borough, Cumberland County"
+ },
+ "PUEBLO OF ACOMA|NM": {
+  "lat": 35.0434,
+  "lon": -107.379,
+  "note": "I-40 Exit 102, Sky City"
+ },
+ "SAINT JOHNS|FL": {
+  "lat": 30.0817,
+  "lon": -81.5476,
+  "note": "I-95 Exit 329, St. Johns County"
+ },
+ "TAYLOR|MO": {
+  "lat": 39.9372,
+  "lon": -91.5249,
+  "note": "US-61 & US-24 near Hannibal, Marion County"
+ }
+}

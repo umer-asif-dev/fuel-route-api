@@ -1,0 +1,39 @@
+[project]
+name = "fuel-route-api"
+version = "0.1.0"
+description = "Fuel route optimizer API (Spotter assessment)"
+authors = [
+    { name = "Central Access (UmerAsif)", email = "centralaccess@devexcelit.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "django==6.1.1",
+    "djangorestframework>=3.18.1",
+    "drf-spectacular>=0.30.0",
+    "numpy>=2.5.3",
+    "python-dotenv>=1.2.3",
+    "requests>=2.34.2",
+    "scipy>=1.18.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-django>=4.14.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "fuelroute.settings"
+python_files = ["test_*.py"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP", "I"]

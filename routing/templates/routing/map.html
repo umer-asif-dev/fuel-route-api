@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fuel Route Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root { --bg: #fff; --fg: #1d1d1f; --muted: #6e6e73; --line: #2563eb; --panel: rgba(255,255,255,.95); --border: #e5e5ea; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f7; --muted: #a1a1a6; --line: #60a5fa; --panel: rgba(28,28,30,.95); --border: #38383a; } }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+    #map { position: absolute; inset: 0; }
+    .panel { position: absolute; z-index: 1000; top: 12px; right: 12px; width: min(340px, calc(100% - 24px)); max-height: calc(100% - 24px);
+             overflow: auto; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; box-sizing: border-box; }
+    h1 { font-size: 16px; margin: 0 0 4px; }
+    .muted { color: var(--muted); }
+    .totals { display: flex; gap: 16px; margin: 10px 0; }
+    .totals b { display: block; font-size: 18px; }
+    ol { padding-left: 20px; margin: 8px 0 0; }
+    li { margin-bottom: 8px; }
+    .stop-pin { background: var(--line); color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px;
+                text-align: center; font-weight: 600; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.4); }
+    .error { padding: 24px; }
+  </style>
+</head>
+<body>
+{% if error %}
+  <div class="error"><h1>Can't show this route</h1><p>{{ error }}</p></div>
+{% else %}
+  <div id="map"></div>
+  <div class="panel">
+    <h1>{{ plan.start.label }} → {{ plan.finish.label }}</h1>
+    <div class="muted">{{ plan.route.distance_miles }} mi · {{ plan.route.duration_hours }} h driving</div>
+    <div class="totals">
+      <div><span class="muted">Fuel cost</span><b>${{ plan.fuel.total_cost }}</b></div>
+      <div><span class="muted">Gallons</span><b>{{ plan.fuel.total_gallons }}</b></div>
+      <div><span class="muted">Stops</span><b>{{ plan.fuel.stop_count }}</b></div>
+    </div>
+    <ol>
+      {% for stop in plan.fuel.stops %}
+      <li><strong>{{ stop.station.name }}</strong><br>
+        <span class="muted">{{ stop.station.city }}, {{ stop.station.state }} · mile {{ stop.mile_marker }}</span><br>
+        {{ stop.gallons }} gal × ${{ stop.price_per_gallon }} = <strong>${{ stop.cost }}</strong></li>
+      {% endfor %}
+    </ol>
+  </div>
+  {{ plan.geojson|json_script:"route-geojson" }}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const data = JSON.parse(document.getElementById('route-geojson').textContent);
+    const map = L.map('map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--line').trim();
+    const layer = L.geoJSON(data, {
+      style: { color: lineColor, weight: 5, opacity: 0.85 },
+      pointToLayer: (f, latlng) => {
+        if (f.properties.kind === 'fuel_stop') {
+          return L.marker(latlng, { icon: L.divIcon({ className: '', html: `<div class="stop-pin">${f.properties.order}</div>`, iconSize: [26, 26] }) });
+        }
+        return L.circleMarker(latlng, { radius: 8, color: '#fff', weight: 2, fillOpacity: 1,
+                                        fillColor: f.properties.kind === 'start' ? '#16a34a' : '#dc2626' });
+      },
+      onEachFeature: (f, l) => {
+        const p = f.properties;
+        if (p.kind === 'fuel_stop') l.bindPopup(`<b>${p.order}. ${p.name}</b><br>${p.city}, ${p.state} · mile ${p.mile_marker}<br>${p.gallons} gal × $${p.price_per_gallon} = $${p.cost}`);
+        else if (p.label) l.bindPopup(`<b>${p.kind}</b>: ${p.label}`);
+      }
+    }).addTo(map);
+    // Keep the route clear of the summary panel on wide screens.
+    const panel = document.querySelector('.panel');
+    const side = window.innerWidth > 700 ? panel.offsetWidth + 24 : 0;
+    map.fitBounds(layer.getBounds(), { paddingTopLeft: [30, 30], paddingBottomRight: [side + 30, 30] });
+  </script>
+{% endif %}
+</body>
+</html>
